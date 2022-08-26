@@ -58,15 +58,6 @@ module.exports = {
     dog
 }
 
-
-/*
-    Different functions: getter, setter, static 
-    How to achieve inheritance in JS, super()
-    SOLID 
- */
-
-
-
 class Person {
     constructor(firstname, lastname) {
         this.firstname = firstname;
