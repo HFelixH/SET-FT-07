@@ -8,41 +8,46 @@ require 'pry'
 
 class Book
   attr_accessor :is_available, :title
-  attr_reader :language, :rating
+  attr_reader :language, :rating, :author
   attr_writer :isbn
 
   @@books = []
 
   def self.copy(book)
-    Book.new book.title, book.language, book.rating
+    Book.new book.title, book.language, book.rating, book.author
   end
 
   def self.find_books_by_language(language)
     @@books.select { |book| book.language == language }
   end
 
-  def self.get_count_by_language
-    @@books.reduce({}) do |acc, book|
-      if acc.has_key? book.language
+  def self.count_by_language
+    @@books.each_with_object({}) do |book, acc|
+      if acc.key? book.language
         acc[book.language] += 1
       else
         acc[book.language] = 1
       end
-      acc
     end
   end
 
-  def initialize(title, language, rating)
+  def self.find_books_by_author(author)
+    @@books.select { |book| book.author == author }
+  end
+
+  def initialize(title, language, rating, author)
     @title = title
     @language = language
     @rating = rating
     @is_available = true
+    @author = author
 
+    # author.books << self
     @@books << self
   end
 end
 
-class ChildrensBook < Book
+class Childrens_Book < Book
   attr_accessor :is_educational
 
   @@genre = 'Children'
@@ -69,8 +74,9 @@ class Member
   end
 
   def save_card(card_number)
-    # verify the card
-    # authorize the card for subscription
+    verify_card(card_number)
+    authorize_card(card_number)
+
     @card_number = card_number
   end
 
@@ -79,6 +85,10 @@ class Member
   end
 
   private
+
+  def verify_card(card_number); end
+
+  def authorize_card(card_number); end
 
   def can_borrow?(book)
     return false if @books.count >= 5
@@ -103,20 +113,43 @@ class Library
   end
 end
 
-ruby101 = Book.new 'Ruby 101', 'English', 'G'
-ruby102 = Book.new 'Ruby 102', 'English', 'R'
+class Author
+  attr_accessor :pen_name
+
+  def initialize(pen_name)
+    @pen_name = pen_name
+    # @books = []
+  end
+
+  def pen_name_with_suffix
+    @random = Date.now
+    "#{pen_name} blah"
+  end
+
+  def books
+    Book.find_books_by_author self
+  end
+end
+
+alice = Author.new 'bob'
+
+ruby101 = Book.new 'Ruby 101', 'English', 'G', alice
+ruby102 = Book.new 'Ruby 102', 'English', 'R', alice
 ruby101_copy = Book.copy ruby101
 
-kidBook1 = ChildrensBook.new 'Numbers 101', 'English', 'K'
-kidBook2 = ChildrensBook.new 'Numbers 102', 'French', 'K'
-kidBook3 = ChildrensBook.new 'Numbers 103', 'French', 'K'
+kidBook1 = Childrens_Book.new 'Numbers 101', 'English', 'K', alice
+kidBook2 = Childrens_Book.new 'Numbers 102', 'French', 'K', alice
+kidBook3 = Childrens_Book.new 'Numbers 103', 'French', 'K', alice
 
-bob = Member.new 'Bob', 16, 34_234_324
-jim = Member.new 'Jim', 20, 34_234_324
+# bob = Member.new 'Bob', 16, 34_234_324
+# jim = Member.new 'Jim', 20, 34_234_324
+# jim.save_card '4242424242424242'
 
-library = Library.new
+# library = Library.new
 
-library.add_books [ruby101, ruby102, kidBook1, kidBook2, kidBook3, ruby101_copy]
-library.add_members [bob, jim]
+# library.add_books [ruby101, ruby102, kidBook1, kidBook2, kidBook3, ruby101_copy]
+# library.add_members [bob, jim]
 
 binding.pry
+
+
