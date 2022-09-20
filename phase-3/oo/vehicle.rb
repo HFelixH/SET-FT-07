@@ -50,5 +50,3 @@ binding.pry
 #     result.round
 #   end
 # end
-
-
