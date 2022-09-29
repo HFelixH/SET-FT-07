@@ -1,0 +1,21 @@
+task :environment do
+  require_relative './config/environment'
+end
+
+namespace :migrate do
+  task up: :environment do
+    require_relative './db/migrations/01_create_cats'
+    require_relative './db/migrations/02_create_owners'
+
+    CreateCatsTable.migrate(:up)
+    CreateOwnersTable.migrate(:up)
+  end
+
+  task down: :environment do
+    require_relative './db/migrations/01_create_cats'
+    require_relative './db/migrations/02_create_owners'
+
+    CreateCatsTable.migrate(:down)
+    CreateOwnersTable.migrate(:down)
+  end
+end
