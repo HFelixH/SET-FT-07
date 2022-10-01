@@ -1,12 +1,9 @@
-class Cat < ActiveRecord::Base
-  belongs_to :owner
+class Owner < ActiveRecord::Base
+  has_many :cats
 
   # def as_json(options = {})
   #   {
   #     name: name,
-  #     age: age,
-  #     breed: breed,
-  #     owner: owner
   #   }
   # end
 
