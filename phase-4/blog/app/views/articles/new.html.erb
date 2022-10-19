@@ -1,0 +1,50 @@
+<h1>New article</h1>
+
+<script>
+  console.log('Script here')
+</script>
+
+<%= form_with model: @article do |form| %>
+
+  <% if @article.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(@article.errors.count, "error") %> prohibited this @article from being saved:</h2>
+
+      <ul>
+        <% @article.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+    <div style="color:red"><%= @article.errors[:name].first %></div>
+  </div>
+  <div>
+    <%= form.label :content %>
+    <%= form.text_area :content, size: "60x10" %>
+    <div style="color:red"><%= @article.errors[:content].first %></div>
+  <div>
+  <div>
+    <span>Select Author</span>
+    <%= form.collection_select :author_id, Author.order(:name), :id, :name %>
+  </div>
+
+  <div>
+    <span>Select Category</span>
+    <%= form.collection_radio_buttons :category_id, Category.order(:name), :id, :name %>
+  </div>
+
+  <%= form.submit %>
+  </div>
+  <%end%>
+  </div>
+
+<br>
+
+<div>
+  <%= link_to "Back to articles", articles_list_path %>
+</div>
